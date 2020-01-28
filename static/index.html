@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Korg Cards</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="index.css" rel="stylesheet">
+
+        <script src="index.js"></script>
+        <script src="jquery-3.4.1.min.js"></script>
+    </head>
+    <body>
+        <div id="header">
+            <div id="header-default">
+                <i class="material-icons" style="margin-right:1rem;">note</i>
+                <h1>Korg</h1>
+                <input id="header-search" placeholder="Search" />
+            </div>
+            <div id="header-selected">
+                <i class="material-icons">close</i>
+                <span id="header-num-selected">2 selected</span>
+                <div id="header-right-aligned">
+                    <i class="material-icons select-buttons">event</i>
+                    <i class="material-icons select-buttons">label</i>
+                    <i class="material-icons select-buttons" onclick="for_each_selected(remove_card_button)">delete_forever</i>
+                </div>
+            </div>
+        </div>
+        <div id="wrapper">
+            <div class="sidebar" id="sidebar">
+                <div id="notebooks-title">
+                    <h3>NOTEBOOKS</h3><hr>
+                    <i class="material-icons" onclick="show_input('Create new notebook','Notebook title',create_notebook)">library_add</i>
+                    <i class="material-icons toggle-delete-notebooks" onclick="notebook_edit_toggle(this)">delete</i>
+                </div>
+                <div style="display:none;" id="template-notebook" class="sidebar-button" onclick="sidebar_click(this)"><i class="material-icons sidebar-icon"></i> <h2 class='sidebar-title'>Notes</h2></div>
+            </div>
+            <div class="content">
+                <div class="column one" id="0"><h2 id="card-placeholder">Select a notebook</h2></div>
+                <div class="column two" id="1"></div>
+                <div class="column three" id="2"></div>
+            </div>
+        </div>
+
+        <div id="edit-overlay" class="overlay" onclick="edit_overlay_clicked()"></div>
+        <div id="input-overlay" class="overlay" onclick="input_overlay_clicked()"></div>
+
+        <div class="absolute-card" style="display:none;">
+            <textarea class="title" placeholder="Title">title</textarea>
+            <textarea class="text" placeholder="Content" autofocus>rabbit</textarea>
+        </div>
+
+        <div class="card" id="template-card" data-uuid="UUID_PLACEHOLDER" style="display:none;">
+            <div class="card-click-background" onclick="card_clicked(this.parentNode);"></div>
+            <div class="select-card"><i class="material-icons material-check" data-checked onclick="material_check(this);card_toggled(this, this.parentNode.parentNode);">check_circle_outline</i></div>
+            <h1 class="title">TITLE_FORMATTED</h1>
+            <pre class="text">TEXT_FORMATTED</pre>
+            <div class="card-buttons">
+                <i class="material-icons">event</i>
+                <i class="material-icons" style="margin-left:5px" onclick="move_card_button(this.parentNode.parentNode)">open_with</i>
+                <i class="material-icons" style="margin-left:5px" onclick="show_input('Set label','label-1 label-2...',set_label,[this.parentNode.parentNode])">label</i><span class="card-label"></span>
+                <i class="material-icons" style="margin-left:auto" onclick="remove_card_button(this.parentNode.parentNode);">delete_forever</i>
+            </div>
+        </div>
+        
+        <div id="input-popup">
+            <h2 id="input-popup-title">Title</h2>
+            <input id="input-popup-entry">
+            <br><br>
+            <i class="material-icons" id="input-popup-close" onclick="hide_input()">close</i>
+            <i class="material-icons" id="input-popup-done">done</i>
+        </div>
+
+        <div class="add-card" onclick="add_card_clicked()"><i class="material-icons">note_add</i></div>
+    </body>
+</html>
