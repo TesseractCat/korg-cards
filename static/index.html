@@ -57,14 +57,16 @@
             <div class="card-buttons">
                 <i class="material-icons">event</i>
                 <i class="material-icons" style="margin-left:5px" onclick="move_card_button(this.parentNode.parentNode)">open_with</i>
-                <i class="material-icons" style="margin-left:5px" onclick="show_input('Set label','label-1 label-2...',set_label,[this.parentNode.parentNode])">label</i><span class="card-label"></span>
+                <i class="material-icons" style="margin-left:5px" onclick="
+                    show_input('Set label','label-1 label-2...',set_label,[this.parentNode.parentNode],this.parentNode.querySelector('.card-label').innerText);
+                    ">label</i><span class="card-label"></span>
                 <i class="material-icons" style="margin-left:auto" onclick="remove_card_button(this.parentNode.parentNode);">delete_forever</i>
             </div>
         </div>
         
         <div id="input-popup">
             <h2 id="input-popup-title">Title</h2>
-            <input id="input-popup-entry">
+            <input id="input-popup-entry" onkeydown="input_enter_pressed(event, this.parentNode)">
             <br><br>
             <i class="material-icons" id="input-popup-close" onclick="hide_input()">close</i>
             <i class="material-icons" id="input-popup-done">done</i>

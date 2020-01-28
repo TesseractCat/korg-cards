@@ -465,6 +465,13 @@ function swap_cards(uuid1,uuid2) {
     update_server_data();
 }
 
+function input_enter_pressed(event, elem) {
+    event = event || window.event;
+    if (event.keyCode == 13) {
+        elem.querySelector("#input-popup-done").click();
+    }
+}
+
 function hide_input() {
     document.getElementById("input-popup").style.opacity = 0;
     document.getElementById("input-popup").style.pointerEvents = "none";
@@ -473,9 +480,13 @@ function hide_input() {
     document.getElementById("input-popup-entry").value = "";
 }
 
-function show_input(title, placeholder, ok_callback, args) {
+function show_input(title, placeholder, ok_callback, args, optional_default_text) {
+    optional_default_text = optional_default_text || "";
+
     document.getElementById("input-popup-title").innerText = title;
     document.getElementById("input-popup-entry").placeholder = placeholder;
+    document.getElementById("input-popup-entry").value = optional_default_text;
+
     document.getElementById("input-popup-done").onclick = function() {
         if (args == null) {
             ok_callback(document.getElementById("input-popup-entry").value);
