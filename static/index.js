@@ -420,7 +420,11 @@ function org_checkbox_clicked(elem) {
 function set_label(user_input, elem) {
     for (var i = 0; i < cards.length; i++) {
         if (cards[i].uuid == elem.dataset.uuid) {
-            cards[i].tag = ":" + user_input.split(new RegExp('\\s+','gi')).join(":") + ":";
+            if (user_input == "") {
+                cards[i].tag = "";
+            } else {
+                cards[i].tag = ":" + user_input.split(new RegExp('\\s+','gi')).join(":") + ":";
+            }
         }
     }
     elem.getElementsByClassName("card-label")[0].innerText = user_input;
