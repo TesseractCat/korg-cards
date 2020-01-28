@@ -177,7 +177,7 @@ body, html {
     padding-bottom:1px;
     cursor:pointer;
     opacity:0;
-    transition:all 0.03s, opacity 0.2s;
+    transition:all 0.03s, opacity 0.2s, background-color 0.1s;
 }
 .sidebar-button h2 {
     display:inline-block;

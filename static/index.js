@@ -57,10 +57,10 @@ function org_to_cards(org_text) {
 
     split_org_text.forEach(function(line) {
         if (line[0] === "*") {
-            cards.push({title:line.split("\n")[0].replace(new RegExp('\\* *','gi'),''),
+            cards.push({title:line.split("\n")[0].replace(new RegExp('\\* *','gi'),'').replace(new RegExp(':.*:','gi'),''),
                         text:line.split("\n").slice(1).join("\n"),
                         uuid:uuidv4(),
-                        tag:""});
+                        tag:(line.split("\n")[0].match(new RegExp(':.*:','gi')) || [""])[0]});
         }
     });
     add_cards(cards);
@@ -69,7 +69,7 @@ function org_to_cards(org_text) {
 function cards_to_org() {
     var org_text = "";
     cards.forEach(function(card) {
-        org_text += "* " + card.title + /*" :" + card.tag.split(" ").join(":") + ":" +*/ "\n" + card.text + "\n";
+        org_text += "* " + card.title + " " + card.tag + "\n" + card.text + "\n";
     });
 
     //Clean up extraneous newlines
@@ -172,7 +172,12 @@ function edit_overlay_clicked() {
     },300);
 }
 
-function add_card(title,text,uuid,just_created) {
+function add_card(card,just_created) {
+    var title = card.title;
+    var text = card.text;
+    var uuid = card.uuid;
+    var tag = card.tag || "";
+    
     if (just_created) {
         current_column = 0;
     }
@@ -184,6 +189,7 @@ function add_card(title,text,uuid,just_created) {
 
     new_card.getElementsByClassName("title")[0].innerHTML = format_orgtext(title);
     new_card.getElementsByClassName("text")[0].innerHTML = format_orgtext(text);
+    new_card.querySelector(".card-label").innerText = tag.replace(/(^:|:$)/gi,'').replace(/:/gi,' ');
 
     new_card.style.display = "block";
 
@@ -231,13 +237,13 @@ function add_cards(card_array) {
     });
 
     for (var i = 0; i < card_array.length; i++) {
-        card_array[i].elem = add_card(card_array[i].title, card_array[i].text, card_array[i].uuid, false);
+        card_array[i].elem = add_card(card_array[i], false);
     }
 }
 
 function add_card_clicked() {
     var uuid = uuidv4();
-    cards.unshift({title:"",text:"",uuid:uuid,elem:add_card("","",uuid,true)});
+    cards.unshift({title:"",text:"",uuid:uuid,elem:add_card({title:"",text:"",uuid:uuid,tag:""},true)});
     add_cards(cards);
     card_clicked(document.querySelectorAll('[data-uuid="'+uuid+'"]')[0]);
 }
@@ -414,11 +420,13 @@ function org_checkbox_clicked(elem) {
 function set_label(user_input, elem) {
     for (var i = 0; i < cards.length; i++) {
         if (cards[i].uuid == elem.dataset.uuid) {
-            cards[i].tag = user_input;
+            cards[i].tag = ":" + user_input.split(new RegExp('\\s+','gi')).join(":") + ":";
         }
     }
     elem.getElementsByClassName("card-label")[0].innerText = user_input;
     hide_input();
+    
+    update_server_data();
 }
 
 function move_card_button(elem) {
