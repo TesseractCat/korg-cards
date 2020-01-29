@@ -348,9 +348,9 @@ function format_orgtext(text) {
             formatted_text[i] = formatted_text[i] + "</span>";
         }
 
-        if (formatted_text[i].match(new RegExp('\-\-\-\-\-\-*','gi')) != null) {
+        /*if (formatted_text[i].match(new RegExp('\-\-\-\-\-\-*','gi')) != null) {
             formatted_text[i] = "——————————";
-        }
+        }*/
 
         if (formatted_text[i] === "") {
             //formatted_text.splice(i,1);
@@ -369,10 +369,52 @@ function format_orgtext(text) {
             to_pop[i] = to_pop[i] - 1;
         }
     });
+    
+    formatted_text = formatted_text.join("\n");
+
+    //Tables
+    var match_tables = new RegExp("(?:\\n|^)([^\\S\\r\\n]*\\|(?:.+\\n[^\\S\\r\\n]*\\|)+.+)","gi");
+    formatted_text = formatted_text.replace(match_tables, function(match, table_text) {
+        //Remove whitespace
+        var table_text = table_text.replace(new RegExp("[^\\S\\r\\n]*(\\|)[^\\S\\r\\n]*","gi"), function(match,p1) {
+            return p1;
+        });
+
+        var table_lines = table_text.split("\n");
+        var formatted_table_lines = ["<table>"];
+        var table_width = 0;
+        for (var i = 0; i < table_lines.length; i++) {
+            if (table_lines[i].startsWith("|-")) {
+                continue;
+            }
+            var split_table_row = table_lines[i].split("|").filter(function(e) { return e !== ""});
+            if (i == 0) {
+                table_width = split_table_row.length;
+            } else if (split_table_row.length < table_width) {
+                var length_diff = table_width - split_table_row.length;
+                split_table_row = split_table_row.concat(new Array(length_diff).fill(''));
+            } else if (split_table_row.length > table_width) {
+                var length_diff = split_table_row.length - table_width;
+                split_table_row.splice(-length_diff, length_diff);
+            }
+
+            split_table_row.forEach(function (cell, index) {
+                if (i == 0) {
+                    split_table_row[index] = "<th>" + cell + "</th>";
+                } else {
+                    split_table_row[index] = "<td>" + cell + "</td>";
+                }
+            });
+
+            formatted_table_lines.push("<tr>" + split_table_row.join("") + "</tr>");
+        }
+        formatted_table_lines.push("</table>");
+
+        return formatted_table_lines.join("\n");
+    });
 
     //console.log(formatted_text);
 
-    formatted_text = formatted_text.join("\n");
     Object.keys(format_symbols).forEach(function(key) {
         formatted_text = formatted_text.replace(new RegExp(key,'gi'), function (match, p1, p2, p3) {
             return format_symbols[key][0] + p1 + format_symbols[key][1];

@@ -375,6 +375,19 @@ body, html {
     opacity:0 !important;
 }
 
+table,th,td {
+    border: 1px solid grey;
+    border-collapse: collapse;
+    padding:6px;
+    width:100%;
+}
+th {
+    border-bottom:2px solid grey;
+}
+table {
+    border-radius:10px;
+}
+
 .absolute-card {
     position:absolute;
     left:0px;
