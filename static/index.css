@@ -383,6 +383,7 @@ table,th,td {
 }
 th {
     border-bottom:2px solid grey;
+    font-size:1.1em;
 }
 table {
     border-radius:10px;

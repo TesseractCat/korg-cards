@@ -341,9 +341,11 @@ function format_orgtext(text) {
 
         //formatted_text[i] = formatted_text[i].replace(new RegExp("^\\s.*?(?=[^\\s])", "gi"), "");
 
-        if (formatted_text[i].match(new RegExp('\\*\\*+','gi')) != null) {
-            indent_level = formatted_text[i].match(new RegExp('\\*\\*+','gi'))[0].length - 1;
-            current_indent_level = formatted_text[i].match(new RegExp('\\*\\*+','gi'))[0].length - 2;
+        var match_headline = new RegExp('(\\n|^)\\s*(\\*\\*+)','i');
+
+        if (formatted_text[i].match(match_headline) != null) {
+            indent_level = formatted_text[i].match(match_headline)[2].length - 1;
+            current_indent_level = formatted_text[i].match(match_headline)[2].length - 2;
             formatted_text[i] = formatted_text[i].replace(/\*\*+/gi, "<span class='org-title'>&bull;");
             formatted_text[i] = formatted_text[i] + "</span>";
         }
