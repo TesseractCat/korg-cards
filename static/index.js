@@ -291,9 +291,12 @@ function fade_in_card(card, speed) {
 
 function add_card_clicked() {
     var uuid = uuidv4();
-    cards.unshift({title:"",text:"",uuid:uuid,elem:add_card({title:"",text:"",uuid:uuid,tag:""},true)});
+    cards.unshift({title:"",text:"",uuid:uuid,tag:""});
     add_cards(cards);
-    card_clicked(document.querySelectorAll('[data-uuid="'+uuid+'"]')[0]);
+    setTimeout(function () {
+        var new_card = document.querySelectorAll('[data-uuid="'+uuid+'"]')[0];
+        card_clicked(new_card);
+    }, 100);
 }
 
 function remove_card_button(elem) {
@@ -321,11 +324,12 @@ function format_orgtext(text) {
 
     var formatted_text = text.replace(new RegExp('\/','gi'),"&#47;").split("\n");
 
-    var format_symbols = {"*":["<b>","</b>"],
-                          "&#47;":["<i>","</i>"],
-                          "_":["<u>","</u>"],
+    var format_symbols = {"\\*(.*?)\\*":["<b>","</b>"],
+                          "^\\b$":["<i>","</i>"],
+                          "\\_(.*?)\\_":["<u>","</u>"],
                           /*"=":["<code>","</code>"],*/
-                          "~":["<q>","</q>"]};
+                          "\\~(.*?)\\~":["<q>","</q>"],
+                          "(\\:.*\\:)":["<span class='inline-tag'>","</span>"]};
 
     var indent_level = 0;
     var current_indent_level = 0;
@@ -370,13 +374,9 @@ function format_orgtext(text) {
 
     formatted_text = formatted_text.join("\n");
     Object.keys(format_symbols).forEach(function(key) {
-        matches = formatted_text.match(new RegExp('\\'+key+'(.|[\n])*?(\\'+key+')','gi'));
-        if (matches != null) {
-            for (var i = 0; i < matches.length; i++) {
-                formatted_text = formatted_text.replace(key,format_symbols[key][0]);
-                formatted_text = formatted_text.replace(key,format_symbols[key][1]);
-            }
-        }
+        formatted_text = formatted_text.replace(new RegExp(key,'gi'), function (match, p1, p2, p3) {
+            return format_symbols[key][0] + p1 + format_symbols[key][1];
+        });
     });
 
     var occurrence = -1;

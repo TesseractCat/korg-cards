@@ -347,6 +347,9 @@ body, html {
 .DONE {
     color:rgb(77, 161, 102) !important;
 }
+.inline-tag {
+    color:rgb(50, 125, 255);
+}
 .card a {
     color:white;
 }
