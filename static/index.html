@@ -13,7 +13,7 @@
             <div id="header-default">
                 <i class="material-icons" style="margin-right:1rem;">note</i>
                 <h1>Korg</h1>
-                <input id="header-search" placeholder="Search" />
+                <input id="header-search" placeholder="Search" onkeyup="search_key(this)" onkeydown="search_key(this)" onfocusout="clear_search(this)" />
             </div>
             <div id="header-selected">
                 <i class="material-icons">close</i>

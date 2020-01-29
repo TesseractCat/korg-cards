@@ -634,6 +634,23 @@ function for_each_selected(selected_callback) {
     });
 }
 
+function search_key(elem) {
+    var search = elem.value.toLowerCase();
+    cards.forEach(function (card) {
+        if (card.title.toLowerCase().includes(search) || card.text.toLowerCase().includes(search) || search == "") {
+            card.elem.style.display = "block";
+        } else {
+            card.elem.style.display = "none";
+        }
+    });
+}
+
+function clear_search() {
+    cards.forEach(function(card) {
+        card.elem.style.display = "block";
+    });
+}
+
 window.onload = function () {
     //for (var i = 0; i < 100; i++) {
     //    add_card(random_from_array(["Bingletown","Who?","We found THREE guys moping around over there, can you deal with it?"]),
