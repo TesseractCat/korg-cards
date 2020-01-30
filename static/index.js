@@ -143,6 +143,8 @@ function card_clicked(elem) {
         new_card.style.top = "15%";
         new_card.style.height = "70%";
 
+        new_card.getElementsByClassName("title")[0].focus();
+
         document.getElementById("edit-overlay").style.opacity = 1;
     },100);
 }
